@@ -66,10 +66,12 @@ app.get('/api/exercise3/pages/:page', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Exercise 1: /api/exercise1`);
-    console.log(`Exercise 2: /api/exercise2`);
-    console.log(`Exercise 3: /api/exercise3/pages/home`);
-    console.log(`Exercise 4: /home.html, /about.html, /contact.html`);
-});
+// Start server locally
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+// Export for Vercel
+module.exports = app;
