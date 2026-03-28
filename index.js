@@ -3,22 +3,23 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Exercise 1 - Serve index.html
+// ── Exercise 1 ──────────────────────────────────────────────
 app.get('/api/exercise1', (req, res) => {
-    const filePath = path.join(__dirname, 'lib', 'index.html');
-    fs.readFile(filePath, (err, data) => {
-        if (err) return res.status(500).send('Internal Server Error');
+    try {
+        const filePath = path.resolve(__dirname, 'lib', 'index.html');
+        const data = fs.readFileSync(filePath);
         res.status(200).type('text/html').send(data);
-    });
+    } catch (err) {
+        res.status(500).send('Error: ' + err.message);
+    }
 });
 
-// Exercise 2 - Serve users.txt as HTML table
+// ── Exercise 2 ──────────────────────────────────────────────
 app.get('/api/exercise2', (req, res) => {
-    const filePath = path.join(__dirname, 'lib', 'users.txt');
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) return res.status(500).send('Internal Server Error');
+    try {
+        const filePath = path.resolve(__dirname, 'lib', 'users.txt');
+        const data = fs.readFileSync(filePath, 'utf8');
 
         const lines = data.trim().split('\n');
         const headers = lines[0].split('|').map(h => h.trim());
@@ -42,10 +43,12 @@ app.get('/api/exercise2', (req, res) => {
         tableHTML += '</table>';
 
         res.status(200).type('text/html').send(tableHTML);
-    });
+    } catch (err) {
+        res.status(500).send('Error: ' + err.message);
+    }
 });
 
-// Exercise 3 - Serve home, about, contact pages
+// ── Exercise 3 ──────────────────────────────────────────────
 const pageMap = {
     home: 'home.html',
     about: 'about.html',
@@ -56,31 +59,33 @@ app.get('/api/exercise3/pages/:page', (req, res) => {
     const fileName = pageMap[req.params.page];
     if (!fileName) return res.status(404).send('Page Not Found');
 
-    const filePath = path.join(__dirname, 'lib', fileName);
-    fs.readFile(filePath, (err, data) => {
-        if (err) return res.status(500).send('Internal Server Error');
+    try {
+        const filePath = path.resolve(__dirname, 'lib', fileName);
+        const data = fs.readFileSync(filePath);
         res.status(200).type('text/html').send(data);
-    });
+    } catch (err) {
+        res.status(500).send('Error: ' + err.message);
+    }
 });
 
-// Exercise 4 - Serve static files from public folder manually
+// ── Exercise 4 ──────────────────────────────────────────────
 app.get('/:filename', (req, res) => {
     const fileName = req.params.filename;
     if (!fileName.endsWith('.html')) return res.status(404).send('Not Found');
 
-    const filePath = path.join(__dirname, 'public', fileName);
-    fs.readFile(filePath, (err, data) => {
-        if (err) return res.status(404).send('File Not Found');
+    try {
+        const filePath = path.resolve(__dirname, 'public', fileName);
+        const data = fs.readFileSync(filePath);
         res.status(200).type('text/html').send(data);
-    });
+    } catch (err) {
+        res.status(404).send('File Not Found: ' + err.message);
+    }
 });
 
-// Export for Vercel
+// ── Export for Vercel ────────────────────────────────────────
 module.exports = app;
 
-// Start server locally
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
