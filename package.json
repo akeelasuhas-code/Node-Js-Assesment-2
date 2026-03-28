@@ -1,0 +1,16 @@
+{
+  "name": "nodejs-assignment2",
+  "version": "1.0.0",
+  "description": "NodeJS Assignment 2 - Webserver",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "exercise1": "node exercise1.js",
+    "exercise2": "node exercise2.js",
+    "exercise3": "node exercise3.js",
+    "exercise4": "node exercise4.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
