@@ -5,9 +5,6 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Exercise 4 - Static files from public folder
-app.use(express.static('public'));
-
 // Exercise 1 - Serve index.html
 app.get('/api/exercise1', (req, res) => {
     const filePath = path.join(__dirname, 'lib', 'index.html');
@@ -66,12 +63,24 @@ app.get('/api/exercise3/pages/:page', (req, res) => {
     });
 });
 
+// Exercise 4 - Serve static files from public folder manually
+app.get('/:filename', (req, res) => {
+    const fileName = req.params.filename;
+    if (!fileName.endsWith('.html')) return res.status(404).send('Not Found');
+
+    const filePath = path.join(__dirname, 'public', fileName);
+    fs.readFile(filePath, (err, data) => {
+        if (err) return res.status(404).send('File Not Found');
+        res.status(200).type('text/html').send(data);
+    });
+});
+
+// Export for Vercel
+module.exports = app;
+
 // Start server locally
 if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
 }
-
-// Export for Vercel
-module.exports = app;
