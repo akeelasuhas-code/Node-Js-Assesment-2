@@ -4,6 +4,13 @@
     { "src": "index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "index.js" }
+    { "src": "/api/exercise1", "dest": "index.js" },
+    { "src": "/api/exercise2", "dest": "index.js" },
+    { "src": "/api/exercise3/pages/home", "dest": "index.js" },
+    { "src": "/api/exercise3/pages/about", "dest": "index.js" },
+    { "src": "/api/exercise3/pages/contact", "dest": "index.js" },
+    { "src": "/home.html", "dest": "index.js" },
+    { "src": "/about.html", "dest": "index.js" },
+    { "src": "/contact.html", "dest": "index.js" }
   ]
 }
